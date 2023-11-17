@@ -6,6 +6,7 @@ import collection from '../assets/data/automation.json'
 import { useContext, useEffect, useState } from 'react'
 import axios from 'axios'
 import { myContext } from '../pages/dashboard/MemberSearch'
+import { toast } from 'react-toastify'
 
 // const newman = require('newman')
 
@@ -19,11 +20,15 @@ const MemberSearchComponent = () => {
     console.log('Success:', values)
     try {
       setLoading(true)
-      const response = await axios.get('http://localhost:3005/run-collection')
+      const response = await axios.get(
+        'https://newman-server.onrender.com/run-collection'
+      )
       setReport(response.data)
       setLoading(false)
+      toast.success('Report is generated')
     } catch (error) {
       setLoading(false)
+      toast.error('Some error occured')
       console.log(error)
     }
   }
