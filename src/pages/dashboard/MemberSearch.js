@@ -4,6 +4,7 @@ import MemberSearchComponent from '../../components/MemberSearchComponent'
 import collection from '../../assets/data/automation.json'
 import { createContext, useEffect, useState } from 'react'
 import axios from 'axios'
+import JsonDiffViewer from '../../components/JsonDiffViewer'
 
 export const myContext = createContext()
 
@@ -23,6 +24,7 @@ const MemberSearch = () => {
       value={{ form, report, setReport, loading, setLoading }}
     >
       <Wrapper>
+        {/* <JsonDiffViewer /> */}
         <MemberSearchComponent />
 
         {loading ? (

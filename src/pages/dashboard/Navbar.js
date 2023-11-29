@@ -84,7 +84,7 @@ const Wrapper = styled.nav`
   background-color: var(--white);
   padding: 0 0.5rem;
   padding: 1rem;
-  border-bottom: 1px solid var(--grey-50);
+  border-bottom: 1px solid var(--grey-100);
   position: sticky;
   top: 0;
   z-index: 1;

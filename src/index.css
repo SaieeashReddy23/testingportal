@@ -282,3 +282,21 @@ ul {
 .report-gen span:hover {
   transform: scale(1.4);
 }
+
+.back-btn {
+  display: grid;
+  place-items: center;
+  background-color: var(--white);
+  padding: 0.25rem 0.75rem;
+  font-size: 1.2rem;
+  border: 1px solid var(--grey-300);
+  border-radius: 0.5rem;
+  color: var(--grey-600);
+  margin-bottom: 1rem;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.back-btn:hover {
+  transform: scale(1.05);
+}

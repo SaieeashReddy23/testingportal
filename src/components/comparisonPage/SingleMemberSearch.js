@@ -1,38 +1,24 @@
 import { Button, DatePicker, Form, Input } from 'antd'
-import { styled } from 'styled-components'
-// import newman from 'newman'
-
-import collection from '../assets/data/automation.json'
-import { useContext, useEffect, useState } from 'react'
 import axios from 'axios'
-import { myContext } from '../pages/dashboard/MemberSearch'
-import { toast } from 'react-toastify'
+import { useContext } from 'react'
+import { styled } from 'styled-components'
+import { myComparisonContext } from '../../pages/dashboard/Comparison'
 
-// const newman = require('newman')
-
-const MemberSearchComponent = () => {
-  const { form, setReport, loading, setLoading } = useContext(myContext)
+const SingleMemberSearch = () => {
+  const { form, setLoading, setShowComparison } =
+    useContext(myComparisonContext)
 
   const onFinishFailed = (errorInfo) => {
     console.log('Failed:', errorInfo)
   }
   const onFinish = async (values) => {
     console.log('Success:', values)
-    try {
-      setLoading(true)
-      const response = await axios.get(
-        'https://newman-server.onrender.com/run-collection'
-      )
-      setReport(response.data)
+    setLoading(true)
+    setTimeout(() => {
       setLoading(false)
-      toast.success('Report is generated')
-    } catch (error) {
-      setLoading(false)
-      toast.error('Some error occured')
-      console.log(error)
-    }
+      setShowComparison(true)
+    }, 2000)
   }
-
   return (
     <Wrapper className="member-search-container">
       <Form
@@ -73,7 +59,7 @@ const MemberSearchComponent = () => {
             type="primary"
             htmlType="submit"
             style={{ width: '100%' }}
-            disabled={loading}
+            // disabled={loading}
           >
             Submit
           </Button>
@@ -82,7 +68,7 @@ const MemberSearchComponent = () => {
     </Wrapper>
   )
 }
-export default MemberSearchComponent
+export default SingleMemberSearch
 
 const Wrapper = styled.div`
   width: 40vw;

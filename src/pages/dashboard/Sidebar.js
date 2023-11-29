@@ -38,7 +38,7 @@ export default Sidebar
 
 const Wrapper = styled.div`
   display: block;
-  border-right: 1px solid var(--grey-50);
+  border-right: 1px solid var(--grey-100);
   /* overflow: hidden; */
   transition: var(--transition);
   padding-right: 0.5rem;
