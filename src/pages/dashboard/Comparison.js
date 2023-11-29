@@ -28,6 +28,6 @@ const Comparison = () => {
 export default Comparison
 
 const Wrapper = styled.div`
-  width: 100%;
-  height: 100%;
+  height: calc(100vh - 5rem);
+  overflow-y: auto;
 `

@@ -88,6 +88,7 @@ const Wrapper = styled.nav`
   position: sticky;
   top: 0;
   z-index: 1;
+  height: 5rem;
 
   .left-content {
     font-weight: 600;

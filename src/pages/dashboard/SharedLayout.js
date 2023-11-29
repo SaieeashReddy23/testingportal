@@ -19,9 +19,9 @@ const SharedLayout = () => {
         <Sidebar sidebar={sidebarIsOpen} />
         <div className="content-layout">
           <Navbar setSidebarIsOpen={setSidebarIsOpen} sidebar={sidebarIsOpen} />
-          <div className="dashboard-page">
-            <Outlet />
-          </div>
+          {/* <div className="dashboard-page"> */}
+          <Outlet />
+          {/* </div> */}
         </div>
       </main>
     </Wrapper>
@@ -54,5 +54,6 @@ const Wrapper = styled.section`
     padding: 1rem;
     width: 100%;
     height: 100%;
+    overflow-y: auto;
   }
 `
