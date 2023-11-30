@@ -7,78 +7,16 @@ import { useState } from 'react'
 import axios from 'axios'
 import { useEffect } from 'react'
 
-const EMPTY_HUNKS = []
+const Eligv2ResponseComparison = ({ panel, setPanelData }) => {
+  const { key, prodResponse, stageResponse, status } = panel
 
-const oldJson = {
-  name: 'Niroj',
-  age: '22',
-  address: {
-    city: 'Kathmandu',
-    country: 'Nepal',
-  },
-}
-
-// const oldJson = {
-//   name: 'Niman',
-//   age: '22',
-//   address: {
-//     city: 'Kathmandu',
-//     country: 'india',
-//   },
-// }
-
-const newJson = {
-  name: 'Niman',
-  age: '22',
-  address: {
-    city: 'Kathmandu',
-    country: 'india',
-  },
-}
-
-const Eligv2ResponseComparison = () => {
-  const [diffState, setDiffState] = useState({})
-
-  //   const oldJsonString = JSON.stringify(oldJson, null, 2)
-  //   const newJsonString = JSON.stringify(newJson, null, 2)
-  //   const diffText = formatLines(diffLines(oldJsonString, newJsonString), {
-  //     context: 3,
-  //   })
-  //   const [diff] = parseDiff(diffText, { nearbySequences: 'zip' })
-
-  const [prod, setProd] = useState('')
-  const [stage, setStage] = useState('')
-
-  const fetchProdAndStageResponse = async () => {
-    try {
-      const prodResponse = await axios.get(
-        `https://jsonplaceholder.typicode.com/todos/5`
-      )
-      const stageResponse = await axios.get(
-        `https://jsonplaceholder.typicode.com/users`
-      )
-      const prodResponseString = JSON.stringify(prodResponse.data, null, 2)
-      const stageResponseString = JSON.stringify(stageResponse.data, null, 2)
-      const diffText = formatLines(
-        diffLines(prodResponseString, stageResponseString),
-        {
-          context: 3,
-        }
-      )
-
-      const [diff] = parseDiff(diffText, { nearbySequences: 'zip' })
-      console.log(diff)
-      setDiffState(diff)
-      setProd(prodResponseString)
-      setStage(stageResponseString)
-    } catch (error) {
-      console.log(error)
-    }
+  if (status === 'error') {
+    return (
+      <div className="error-msg">
+        Some Error occureed while fetching api data , Pls compare again
+      </div>
+    )
   }
-
-  useEffect(() => {
-    fetchProdAndStageResponse()
-  }, [])
 
   return (
     <Wrapper>
@@ -86,14 +24,9 @@ const Eligv2ResponseComparison = () => {
         <div>Prod</div>
         <div>Stage</div>
       </div>
-      {/* <Diff viewType="split" diffType="" hunks={diffState.hunks || EMPTY_HUNKS}>
-        {(hunks) =>
-          hunks.map((hunk) => <Hunk key={hunk.content} hunk={hunk} />)
-        }
-      </Diff> */}
       <ReactDiffViewer
-        oldValue={prod}
-        newValue={stage}
+        oldValue={prodResponse}
+        newValue={stageResponse}
         splitView={true}
         disableWordDiff={true}
         // leftTitle="Prod"
@@ -115,6 +48,7 @@ const Wrapper = styled.div`
   overflow-y: scroll;
   max-height: 60vh;
   position: relative;
+  border: 1px solid var(--grey-50);
 
   .my-diff-header {
     background-color: #f1f8ff;

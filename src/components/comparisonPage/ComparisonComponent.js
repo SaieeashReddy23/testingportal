@@ -1,16 +1,21 @@
 import { CaretRightOutlined } from '@ant-design/icons'
-import React, { useContext } from 'react'
+import React, { useContext, useState } from 'react'
 import { Collapse, theme } from 'antd'
 import { styled } from 'styled-components'
 import Eligv2ResponseComparison from './Eligv2ResponseComparison'
 import { MdArrowBack } from 'react-icons/md'
 import { myComparisonContext } from '../../pages/dashboard/Comparison'
+import MyPanelHeader from './MyPanelHeader'
+import { useEffect } from 'react'
+import { IoMdCheckmarkCircle, IoMdCloseCircle } from 'react-icons/io'
+import axios from 'axios'
 const text = ` Not yet implemented `
+const { Panel } = Collapse
 
 const getItems = (panelStyle) => [
   {
     key: '1',
-    label: 'Eligv2',
+    label: <MyPanelHeader title="Elig v2" />,
     children: <Eligv2ResponseComparison />,
     style: panelStyle,
     extra: <span className="compare-again">Compare Again</span>,
@@ -80,7 +85,43 @@ const getItems = (panelStyle) => [
   },
 ]
 
+const initialPanelData = [
+  {
+    key: '1',
+    apiName: 'Elig v2',
+    status: 'none',
+    isLoading: true,
+    prodResponse: '',
+    stageResponse: '',
+  },
+  {
+    key: '2',
+    apiName: 'Coverage',
+    status: 'none',
+    isLoading: true,
+    prodResponse: '',
+    stageResponse: '',
+  },
+  {
+    key: '3',
+    apiName: 'Network status',
+    status: 'none',
+    isLoading: true,
+    prodResponse: '',
+    stageResponse: '',
+  },
+  {
+    key: '4',
+    apiName: 'Member SearchV2',
+    status: 'none',
+    isLoading: true,
+    prodResponse: '',
+    stageResponse: '',
+  },
+]
+
 const ComparisonComponent = () => {
+  const [panelData, setPanelData] = useState(initialPanelData)
   const { setShowComparison, form } = useContext(myComparisonContext)
   const { token } = theme.useToken()
   const panelStyle = {
@@ -96,6 +137,126 @@ const ComparisonComponent = () => {
     form.resetFields()
   }
 
+  const handleCompareAgain = async (e, panelKey) => {
+    e.stopPropagation()
+    const updatedPanelData = panelData.map((panel) => {
+      if (panel.key === panelKey) {
+        return {
+          ...panel,
+          isLoading: true,
+          status: 'none',
+        }
+      }
+      return panel
+    })
+    setPanelData([...updatedPanelData])
+
+    try {
+      const prodResponse = await axios.get(
+        `https://jsonplaceholder.typicode.com/todos/5`
+      )
+      const stageResponse = await axios.get(
+        `https://jsonplaceholder.typicode.com/users`
+      )
+      const prodResponseString = JSON.stringify(prodResponse.data, null, 2)
+      const stageResponseString = JSON.stringify(stageResponse.data, null, 2)
+
+      const updatedPanelData = panelData.map((panel) => {
+        if (panel.key === panelKey) {
+          return {
+            ...panel,
+            prodResponse: prodResponseString,
+            stageResponse: stageResponseString,
+            isLoading: false,
+            status: 'success',
+          }
+        }
+        return panel
+      })
+      setPanelData([...updatedPanelData])
+    } catch (error) {
+      console.log(error)
+      const updatedPanelData = panelData.map((panel) => {
+        if (panel.key === panelKey) {
+          return {
+            ...panel,
+            prodResponse: '',
+            stageResponse: '',
+            isLoading: false,
+            status: 'error',
+          }
+        }
+        return panel
+      })
+      setPanelData([...updatedPanelData])
+    }
+  }
+
+  const getItems = (data) => {
+    return data.map((panel) => {
+      return {
+        key: panel.key,
+        label: <MyPanelHeader {...panel} />,
+        children: (
+          <Eligv2ResponseComparison panel={panel} setPanelData={setPanelData} />
+        ),
+        style: panelStyle,
+        extra: !panel.isLoading && (
+          <span
+            className="compare-again"
+            onClick={(e) => handleCompareAgain(e, panel.key)}
+          >
+            Compare Again
+          </span>
+        ),
+      }
+    })
+  }
+
+  const fetchPanelApisData = async () => {
+    const data = await Promise.all(
+      panelData.map(async (panel) => {
+        try {
+          const prodResponse = await axios.get(
+            `https://jsonplaceholder.typicode.com/todos/5`
+          )
+          const stageResponse = await axios.get(
+            `https://jsonplaceholder.typicode.com/users`
+          )
+          const prodResponseString = JSON.stringify(prodResponse.data, null, 2)
+          const stageResponseString = JSON.stringify(
+            stageResponse.data,
+            null,
+            2
+          )
+          return {
+            ...panel,
+            prodResponse: prodResponseString,
+            stageResponse: stageResponseString,
+            isLoading: false,
+            status: 'success',
+          }
+        } catch (error) {
+          console.log(error)
+          return {
+            ...panel,
+            isLoading: false,
+            status: 'error',
+          }
+        }
+      })
+    )
+    setPanelData(data)
+  }
+
+  useEffect(() => {
+    console.log('panelData', panelData)
+  }, [panelData])
+
+  useEffect(() => {
+    fetchPanelApisData()
+  }, [])
+
   return (
     <Wrapper>
       <button className="back-btn" onClick={handleBackbtn}>
@@ -104,7 +265,6 @@ const ComparisonComponent = () => {
       <Collapse
         accordion
         bordered={false}
-        defaultActiveKey={['1']}
         expandIcon={({ isActive }) => (
           <CaretRightOutlined rotate={isActive ? 90 : 0} />
         )}
@@ -113,7 +273,8 @@ const ComparisonComponent = () => {
           // height: '400px',
           // overflowY: 'auto',
         }}
-        items={getItems(panelStyle)}
+        // items={getItems(panelStyle)}
+        items={getItems(panelData)}
       />
     </Wrapper>
   )
@@ -156,5 +317,11 @@ const Wrapper = styled.div`
     color: var(--grey-600);
     cursor: pointer;
     transition: var(--transition);
+  }
+
+  .icon {
+    display: grid;
+    place-items: center;
+    font-size: 1.3rem;
   }
 `

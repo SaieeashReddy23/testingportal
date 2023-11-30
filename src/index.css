@@ -282,3 +282,11 @@ ul {
 .report-gen span:hover {
   transform: scale(1.4);
 }
+
+.error-msg {
+  background-color: var(--white);
+  padding: 1rem;
+  font-weight: 500;
+  letter-spacing: 1px;
+  color: red;
+}
