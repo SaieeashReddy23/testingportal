@@ -3,7 +3,7 @@ import ReactDiffViewer from 'react-diff-viewer-continued'
 import 'react-diff-view/style/index.css'
 import { styled } from 'styled-components'
 
-const Eligv2ResponseComparison = ({ panel, setPanelData }) => {
+const JsonDiffViewer = ({ panel, setPanelData }) => {
   const { key, prodResponse, stageResponse, status } = panel
 
   if (status === 'error') {
@@ -37,7 +37,8 @@ const Eligv2ResponseComparison = ({ panel, setPanelData }) => {
     </Wrapper>
   )
 }
-export default Eligv2ResponseComparison
+
+export default JsonDiffViewer
 
 const Wrapper = styled.div`
   background-color: var(--white);

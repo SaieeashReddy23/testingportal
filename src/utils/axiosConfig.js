@@ -24,7 +24,7 @@ const getStageToken = async () => {
   }
 
   try {
-    const response = await stgApi.post('/auth/token')
+    const response = await stgApi.get(STAGE_TOKEN_URL)
     const newToken = response.data.token
     const expirationTimeMs = Date.now() + 60 * 60 * 1000 // 1 hour
     localStorage.setItem('STG_TOKEN', newToken)
@@ -45,7 +45,7 @@ const getProdToken = async () => {
   }
 
   try {
-    const response = await prodApi.post('/auth/token')
+    const response = await prodApi.post(PROD_TOKEN_URL)
     const newToken = response.data.token
     const expirationTimeMs = Date.now() + 60 * 60 * 1000 // 1 hour
     localStorage.setItem('PROD_TOKEN', newToken)

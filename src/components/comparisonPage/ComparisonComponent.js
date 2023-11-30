@@ -14,6 +14,7 @@ import {
   setStageAuthHeader,
   setProdAuthHeader,
 } from '../../utils/axiosConfig'
+import JsonDiffViewer from './JsonDiffViewer'
 
 const initialPanelData = [
   {
@@ -130,9 +131,7 @@ const ComparisonComponent = () => {
       return {
         key: panel.key,
         label: <MyPanelHeader {...panel} />,
-        children: (
-          <Eligv2ResponseComparison panel={panel} setPanelData={setPanelData} />
-        ),
+        children: <JsonDiffViewer panel={panel} setPanelData={setPanelData} />,
         style: panelStyle,
         extra: !panel.isLoading && (
           <span
