@@ -2,12 +2,10 @@ import { CaretRightOutlined } from '@ant-design/icons'
 import React, { useContext, useState } from 'react'
 import { Collapse, theme } from 'antd'
 import { styled } from 'styled-components'
-import Eligv2ResponseComparison from './Eligv2ResponseComparison'
 import { MdArrowBack } from 'react-icons/md'
 import { myComparisonContext } from '../../pages/dashboard/Comparison'
 import MyPanelHeader from './MyPanelHeader'
 import { useEffect } from 'react'
-import axios from 'axios'
 import {
   stgApi,
   prodApi,
