@@ -20,6 +20,8 @@ const initialPanelData = [
     apiName: 'Elig v2',
     status: 'none',
     isLoading: true,
+    prodUrl: 'https://jsonplaceholder.typicode.com/todos/5',
+    stageUrl: 'https://jsonplaceholder.typicode.com/users',
     prodResponse: '',
     stageResponse: '',
   },
@@ -28,6 +30,8 @@ const initialPanelData = [
     apiName: 'Coverage',
     status: 'none',
     isLoading: true,
+    prodUrl: 'https://jsonplaceholder.typicode.com/todos/5',
+    stageUrl: 'https://jsonplaceholder.typicode.com/users',
     prodResponse: '',
     stageResponse: '',
   },
@@ -36,6 +40,8 @@ const initialPanelData = [
     apiName: 'Network status',
     status: 'none',
     isLoading: true,
+    prodUrl: 'https://jsonplaceholder.typicode.com/todos/5',
+    stageUrl: 'https://jsonplaceholder.typicode.com/users',
     prodResponse: '',
     stageResponse: '',
   },
@@ -44,12 +50,15 @@ const initialPanelData = [
     apiName: 'Member SearchV2',
     status: 'none',
     isLoading: true,
+    prodUrl: 'https://jsonplaceholder.typicode.com/todos/5',
+    stageUrl: 'https://jsonplaceholder.typicode.com/users',
     prodResponse: '',
     stageResponse: '',
   },
 ]
 
 const ComparisonComponent = () => {
+  const [transactionId, setTransactionId] = useState({ stage: '', prod: '' })
   const [panelData, setPanelData] = useState(initialPanelData)
   const { setShowComparison, form } = useContext(myComparisonContext)
   const { token } = theme.useToken()
@@ -68,6 +77,7 @@ const ComparisonComponent = () => {
 
   const handleCompareAgain = async (e, panelKey) => {
     e.stopPropagation()
+    console.log('transactionId', transactionId)
     const updatedPanelData = panelData.map((panel) => {
       if (panel.key === panelKey) {
         return {
@@ -78,18 +88,20 @@ const ComparisonComponent = () => {
       }
       return panel
     })
+
     setPanelData([...updatedPanelData])
 
     try {
       await setProdAuthHeader()
       await setStageAuthHeader()
 
-      const prodResponse = await prodApi.get(
-        `https://jsonplaceholder.typicode.com/todos/5`
+      let panelKeyData = updatedPanelData?.find(
+        (panel) => panel.key === panelKey
       )
-      const stageResponse = await stgApi.get(
-        `https://jsonplaceholder.typicode.com/users`
-      )
+
+      const prodResponse = await prodApi.get(panelKeyData.prodUrl)
+      const stageResponse = await stgApi.get(panelKeyData.stageUrl)
+
       const prodResponseString = JSON.stringify(prodResponse.data, null, 2)
       const stageResponseString = JSON.stringify(stageResponse.data, null, 2)
 
@@ -197,12 +209,121 @@ const ComparisonComponent = () => {
     }
   }
 
+  const fetchEligV2AndThenRemainingApis = async () => {
+    try {
+      await setProdAuthHeader()
+      await setStageAuthHeader()
+
+      // Elig v2 call
+      const prodResponse = await prodApi.get(panelData[0].prodUrl)
+      const stageResponse = await stgApi.get(panelData[0].stageUrl)
+
+      let updatedTransactionId = {
+        ...transactionId,
+        prod: prodResponse.data.transactionId,
+        stage: stageResponse.data.transactionId,
+      }
+
+      const prodResponseString = JSON.stringify(prodResponse.data, null, 2)
+      const stageResponseString = JSON.stringify(stageResponse.data, null, 2)
+
+      const updatedPanelData = panelData.map((panel) => {
+        if (panel.key === '1') {
+          return {
+            ...panel,
+            prodResponse: prodResponseString,
+            stageResponse: stageResponseString,
+            isLoading: false,
+            status: 'success',
+          }
+        }
+        return panel
+      })
+
+      hitOtherApisDependedOnEligV2(updatedPanelData, updatedTransactionId)
+      setPanelData([...updatedPanelData])
+      setTransactionId({ ...updatedTransactionId })
+    } catch (error) {
+      console.log(error)
+      const updatedPanelData = panelData.map((panel) => {
+        return {
+          ...panel,
+          prodResponse: '',
+          stageResponse: '',
+          isLoading: false,
+          status: 'error',
+        }
+      })
+      setPanelData([...updatedPanelData])
+    }
+  }
+
+  const hitOtherApisDependedOnEligV2 = async (
+    updatedPanelData,
+    updatedTransactionId
+  ) => {
+    try {
+      console.log('updatedTransactionId', updatedTransactionId)
+      const data = await Promise.all(
+        updatedPanelData.map(async (panel) => {
+          try {
+            if (panel.key === '1') {
+              return { ...panel }
+            }
+
+            const prodResponse = await prodApi.get(panel.prodUrl)
+            const stageResponse = await stgApi.get(panel.stageUrl)
+            const prodResponseString = JSON.stringify(
+              prodResponse.data,
+              null,
+              2
+            )
+            const stageResponseString = JSON.stringify(
+              stageResponse.data,
+              null,
+              2
+            )
+            return {
+              ...panel,
+              prodResponse: prodResponseString,
+              stageResponse: stageResponseString,
+              isLoading: false,
+              status: 'success',
+            }
+          } catch (error) {
+            console.log(error)
+            return {
+              ...panel,
+              isLoading: false,
+              status: 'error',
+            }
+          }
+        })
+      )
+      setPanelData(data)
+    } catch (error) {
+      console.log(error)
+      const data = panelData.map((panel) => {
+        if (panel.key === '1') {
+          return { ...panel }
+        }
+        return {
+          ...panel,
+          isLoading: false,
+          status: 'error',
+        }
+      })
+      setPanelData(data)
+    }
+  }
+
   useEffect(() => {
     console.log('panelData', panelData)
   }, [panelData])
 
   useEffect(() => {
-    fetchPanelApisData()
+    // fetchPanelApisData()
+    fetchEligV2AndThenRemainingApis()
   }, [])
 
   return (

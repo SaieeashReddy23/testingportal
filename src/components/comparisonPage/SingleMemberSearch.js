@@ -13,11 +13,12 @@ const SingleMemberSearch = () => {
   }
   const onFinish = async (values) => {
     console.log('Success:', values)
-    setLoading(true)
-    setTimeout(() => {
-      setLoading(false)
-      setShowComparison(true)
-    }, 2000)
+    setShowComparison(true)
+    // setLoading(true)
+    // setTimeout(() => {
+    //   setLoading(false)
+    //   setShowComparison(true)
+    // }, 2000)
   }
   return (
     <Wrapper className="member-search-container">
