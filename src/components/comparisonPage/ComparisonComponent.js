@@ -1,6 +1,6 @@
 import { CaretRightOutlined } from '@ant-design/icons'
 import React, { useContext, useState } from 'react'
-import { Collapse, theme } from 'antd'
+import { Collapse, Descriptions, theme } from 'antd'
 import { styled } from 'styled-components'
 import { MdArrowBack } from 'react-icons/md'
 import { myComparisonContext } from '../../pages/dashboard/Comparison'
@@ -13,6 +13,7 @@ import {
   setProdAuthHeader,
 } from '../../utils/axiosConfig'
 import JsonDiffViewer from './JsonDiffViewer'
+import dayjs from 'dayjs'
 
 const initialPanelData = [
   {
@@ -60,7 +61,8 @@ const initialPanelData = [
 const ComparisonComponent = () => {
   const [transactionId, setTransactionId] = useState({ stage: '', prod: '' })
   const [panelData, setPanelData] = useState(initialPanelData)
-  const { setShowComparison, form } = useContext(myComparisonContext)
+  const { setShowComparison, form, searchedMember } =
+    useContext(myComparisonContext)
   const { token } = theme.useToken()
   const panelStyle = {
     marginBottom: 24,
@@ -319,6 +321,9 @@ const ComparisonComponent = () => {
 
   useEffect(() => {
     console.log('panelData', panelData)
+    // console.log('Searched member ', searchedMember)
+    let d = searchedMember.dob
+    console.log(dayjs(d).format('MM/DD/YYYY'))
   }, [panelData])
 
   useEffect(() => {
@@ -328,9 +333,28 @@ const ComparisonComponent = () => {
 
   return (
     <Wrapper>
-      <button className="back-btn" onClick={handleBackbtn}>
-        <MdArrowBack />
-      </button>
+      <div className="comparison-header-container">
+        <button className="back-btn" onClick={handleBackbtn}>
+          <MdArrowBack />
+        </button>
+        <Descriptions
+          title=""
+          // layout="vertical"
+          items={[
+            {
+              key: '1',
+              label: 'memberId',
+              children: searchedMember.memberId,
+            },
+            {
+              key: '2',
+              label: 'Date of Birth',
+              children: dayjs(searchedMember.dob).format('MM/DD/YYYY'),
+            },
+          ]}
+        />
+      </div>
+
       <Collapse
         accordion
         bordered={false}
@@ -368,7 +392,6 @@ const Wrapper = styled.div`
     margin: 1rem 0;
     cursor: pointer;
     transition: var(--transition);
-    justify-self: start;
   }
 
   .back-btn:hover {

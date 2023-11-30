@@ -1,21 +1,7 @@
-import { useState } from 'react'
 import { styled } from 'styled-components'
 import { IoMdCloseCircle, IoMdCheckmarkCircle } from 'react-icons/io'
-import { useEffect } from 'react'
 
 const MyPanelHeader = ({ apiName, status, isLoading }) => {
-  //   useEffect(() => {
-  //     setLoading(true)
-  //     setTimeout(() => {
-  //       setLoading(false)
-  //       setStatus('pass')
-  //     }, 2000)
-  //   }, [])
-
-  useEffect(() => {
-    console.log('MyPanelHeader rendered')
-  }, [])
-
   return (
     <Wrapper>
       <div className="title">{apiName}</div>

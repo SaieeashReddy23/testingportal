@@ -290,3 +290,23 @@ ul {
   letter-spacing: 1px;
   color: red;
 }
+
+.comparison-header-container {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 5rem;
+  align-items: center;
+}
+
+.member-header {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+}
+
+/* .ant-descriptions-view {
+  border: 1px solid red;
+  margin-left: 5rem;
+} */

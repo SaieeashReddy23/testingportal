@@ -5,7 +5,7 @@ import { styled } from 'styled-components'
 import { myComparisonContext } from '../../pages/dashboard/Comparison'
 
 const SingleMemberSearch = () => {
-  const { form, setLoading, setShowComparison } =
+  const { form, setLoading, setShowComparison, setSearchedMember } =
     useContext(myComparisonContext)
 
   const onFinishFailed = (errorInfo) => {
@@ -13,12 +13,8 @@ const SingleMemberSearch = () => {
   }
   const onFinish = async (values) => {
     console.log('Success:', values)
+    setSearchedMember({ ...values })
     setShowComparison(true)
-    // setLoading(true)
-    // setTimeout(() => {
-    //   setLoading(false)
-    //   setShowComparison(true)
-    // }, 2000)
   }
   return (
     <Wrapper className="member-search-container">
