@@ -7,83 +7,13 @@ import { MdArrowBack } from 'react-icons/md'
 import { myComparisonContext } from '../../pages/dashboard/Comparison'
 import MyPanelHeader from './MyPanelHeader'
 import { useEffect } from 'react'
-import { IoMdCheckmarkCircle, IoMdCloseCircle } from 'react-icons/io'
 import axios from 'axios'
-const text = ` Not yet implemented `
-const { Panel } = Collapse
-
-const getItems = (panelStyle) => [
-  {
-    key: '1',
-    label: <MyPanelHeader title="Elig v2" />,
-    children: <Eligv2ResponseComparison />,
-    style: panelStyle,
-    extra: <span className="compare-again">Compare Again</span>,
-  },
-  {
-    key: '2',
-    label: 'Coverage',
-    children: <p>{text}</p>,
-    style: panelStyle,
-    extra: <span className="compare-again">Compare Again</span>,
-  },
-  {
-    key: '3',
-    label: 'Network status',
-    children: <p>{text}</p>,
-    style: panelStyle,
-    extra: <span className="compare-again">Compare Again</span>,
-  },
-  {
-    key: '4',
-    label: 'Eligv2',
-    children: <Eligv2ResponseComparison />,
-    style: panelStyle,
-    extra: <span className="compare-again">Compare Again</span>,
-  },
-  {
-    key: '5',
-    label: 'Coverage',
-    children: <p>{text}</p>,
-    style: panelStyle,
-    extra: <span className="compare-again">Compare Again</span>,
-  },
-  {
-    key: '6',
-    label: 'Network status',
-    children: <p>{text}</p>,
-    style: panelStyle,
-    extra: <span className="compare-again">Compare Again</span>,
-  },
-  {
-    key: '7',
-    label: 'Eligv2',
-    children: <Eligv2ResponseComparison />,
-    style: panelStyle,
-    extra: <span className="compare-again">Compare Again</span>,
-  },
-  {
-    key: '8',
-    label: 'Coverage',
-    children: <p>{text}</p>,
-    style: panelStyle,
-    extra: <span className="compare-again">Compare Again</span>,
-  },
-  {
-    key: '9',
-    label: 'Network status',
-    children: <p>{text}</p>,
-    style: panelStyle,
-    extra: <span className="compare-again">Compare Again</span>,
-  },
-  {
-    key: '10',
-    label: 'Eligv2',
-    children: <Eligv2ResponseComparison />,
-    style: panelStyle,
-    extra: <span className="compare-again">Compare Again</span>,
-  },
-]
+import {
+  stgApi,
+  prodApi,
+  setStageAuthHeader,
+  setProdAuthHeader,
+} from '../../utils/axiosConfig'
 
 const initialPanelData = [
   {
@@ -152,10 +82,13 @@ const ComparisonComponent = () => {
     setPanelData([...updatedPanelData])
 
     try {
-      const prodResponse = await axios.get(
+      await setProdAuthHeader()
+      await setStageAuthHeader()
+
+      const prodResponse = await prodApi.get(
         `https://jsonplaceholder.typicode.com/todos/5`
       )
-      const stageResponse = await axios.get(
+      const stageResponse = await stgApi.get(
         `https://jsonplaceholder.typicode.com/users`
       )
       const prodResponseString = JSON.stringify(prodResponse.data, null, 2)
@@ -214,39 +147,57 @@ const ComparisonComponent = () => {
   }
 
   const fetchPanelApisData = async () => {
-    const data = await Promise.all(
-      panelData.map(async (panel) => {
-        try {
-          const prodResponse = await axios.get(
-            `https://jsonplaceholder.typicode.com/todos/5`
-          )
-          const stageResponse = await axios.get(
-            `https://jsonplaceholder.typicode.com/users`
-          )
-          const prodResponseString = JSON.stringify(prodResponse.data, null, 2)
-          const stageResponseString = JSON.stringify(
-            stageResponse.data,
-            null,
-            2
-          )
-          return {
-            ...panel,
-            prodResponse: prodResponseString,
-            stageResponse: stageResponseString,
-            isLoading: false,
-            status: 'success',
+    try {
+      await setProdAuthHeader()
+      await setStageAuthHeader()
+      const data = await Promise.all(
+        panelData.map(async (panel) => {
+          try {
+            const prodResponse = await prodApi.get(
+              `https://jsonplaceholder.typicode.com/todos/5`
+            )
+            const stageResponse = await stgApi.get(
+              `https://jsonplaceholder.typicode.com/users`
+            )
+            const prodResponseString = JSON.stringify(
+              prodResponse.data,
+              null,
+              2
+            )
+            const stageResponseString = JSON.stringify(
+              stageResponse.data,
+              null,
+              2
+            )
+            return {
+              ...panel,
+              prodResponse: prodResponseString,
+              stageResponse: stageResponseString,
+              isLoading: false,
+              status: 'success',
+            }
+          } catch (error) {
+            console.log(error)
+            return {
+              ...panel,
+              isLoading: false,
+              status: 'error',
+            }
           }
-        } catch (error) {
-          console.log(error)
-          return {
-            ...panel,
-            isLoading: false,
-            status: 'error',
-          }
+        })
+      )
+      setPanelData(data)
+    } catch (error) {
+      console.log(error)
+      const data = panelData.map((panel) => {
+        return {
+          ...panel,
+          isLoading: false,
+          status: 'error',
         }
       })
-    )
-    setPanelData(data)
+      setPanelData(data)
+    }
   }
 
   useEffect(() => {

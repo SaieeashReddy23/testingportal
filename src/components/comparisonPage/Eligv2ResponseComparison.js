@@ -1,11 +1,7 @@
 import ReactDiffViewer from 'react-diff-viewer-continued'
-import { diffLines, formatLines } from 'unidiff'
-import { parseDiff, Diff, Hunk } from 'react-diff-view'
+
 import 'react-diff-view/style/index.css'
 import { styled } from 'styled-components'
-import { useState } from 'react'
-import axios from 'axios'
-import { useEffect } from 'react'
 
 const Eligv2ResponseComparison = ({ panel, setPanelData }) => {
   const { key, prodResponse, stageResponse, status } = panel
