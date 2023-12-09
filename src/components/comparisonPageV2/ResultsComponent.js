@@ -308,6 +308,7 @@ const Wrapper = styled.div`
 
   .api-body {
     padding: 1rem;
+    padding-top: 0;
   }
 
   .pre-styling {
