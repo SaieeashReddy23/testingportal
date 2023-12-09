@@ -13,7 +13,7 @@ const { Search } = Input
 
 const Navbar = ({ setSidebarIsOpen, sidebar }) => {
   const navigate = useNavigate()
-  const firstName = 'John'
+  const firstName = 'Sai'
   const vendorData = {
     profilePicURL: profilePic,
   }
@@ -82,13 +82,12 @@ const Wrapper = styled.nav`
   align-items: center;
   justify-content: space-between;
   background-color: var(--white);
-  padding: 0 0.5rem;
   padding: 1rem;
   border-bottom: 1px solid var(--grey-100);
-  position: sticky;
+  position: fixed;
   top: 0;
-  z-index: 1;
-  height: 5rem;
+  width: calc(100% - 200px);
+  height: 4rem;
 
   .left-content {
     font-weight: 600;

@@ -2,48 +2,44 @@ import { Button, Form } from 'antd'
 import { styled } from 'styled-components'
 import MemberSearchComponent from '../../components/MemberSearchComponent'
 import collection from '../../assets/data/automation.json'
-import { createContext, useEffect, useState } from 'react'
-import axios from 'axios'
-import JsonDiffViewer from '../../components/JsonDiffViewer'
+import { createContext, useEffect, useReducer, useState } from 'react'
+import SearchComponent from '../../components/memberSearchPage/SearchComponent'
+import { memberSearchReducer } from '../../components/memberSearchPage/reducer/memberSearchReducer'
+import ResultsComponent from '../../components/memberSearchPage/ResultsComponent'
 
-export const myContext = createContext()
+export const memberSearchContext = createContext()
+
+const initialState = {
+  collection: [],
+  loading: false,
+  error: null,
+  search: 'single',
+  searchCriteria: 'option1',
+  showResults: false,
+  searchData: {},
+}
 
 const MemberSearch = () => {
-  const [form] = Form.useForm()
-  const [report, setReport] = useState('')
-  const [loading, setLoading] = useState(false)
-
-  const openReport = () => {
-    const newWindow = window.open('', '_blank')
-    console.log(newWindow)
-    newWindow.document.write(report)
-  }
+  const [state, dispatch] = useReducer(memberSearchReducer, initialState)
 
   return (
-    <myContext.Provider
-      value={{ form, report, setReport, loading, setLoading }}
-    >
+    <memberSearchContext.Provider value={{ state, dispatch }}>
       <Wrapper>
-        {/* <JsonDiffViewer /> */}
-        <MemberSearchComponent />
-
-        {loading ? (
-          <div className="loading"></div>
-        ) : (
-          report && (
-            <div className="report-gen">
-              Your Report is generated pls{' '}
-              <span onClick={openReport}>click me </span> to open it
-            </div>
-          )
-        )}
+        {state?.showResults ? <ResultsComponent /> : <SearchComponent />}
       </Wrapper>
-    </myContext.Provider>
+    </memberSearchContext.Provider>
   )
 }
 export default MemberSearch
 
 const Wrapper = styled.div`
-  width: 100%;
-  height: 100%;
+  height: calc(100vh - 4rem);
+  margin-top: 4rem;
+  overflow-y: auto;
 `
+
+// const openReport = () => {
+//   const newWindow = window.open('', '_blank')
+//   console.log(newWindow)
+//   newWindow.document.write(report)
+// }

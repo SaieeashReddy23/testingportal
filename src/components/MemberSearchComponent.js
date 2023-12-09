@@ -5,13 +5,14 @@ import { styled } from 'styled-components'
 import collection from '../assets/data/automation.json'
 import { useContext, useEffect, useState } from 'react'
 import axios from 'axios'
-import { myContext } from '../pages/dashboard/MemberSearch'
+import { memberSearchContext } from '../pages/dashboard/MemberSearch'
 import { toast } from 'react-toastify'
 
 // const newman = require('newman')
 
 const MemberSearchComponent = () => {
-  const { form, setReport, loading, setLoading } = useContext(myContext)
+  const { form, setReport, loading, setLoading } =
+    useContext(memberSearchContext)
 
   const onFinishFailed = (errorInfo) => {
     console.log('Failed:', errorInfo)

@@ -6,50 +6,39 @@ import logo from '../../assets/images/uhclogo.png'
 const Sidebar = ({ sidebar }) => {
   return (
     <Wrapper>
-      <div className="sidebar-container">
-        <div className="content">
-          <div className="logo-container">
-            <img src={logo} alt="logo" className="logo" />
-            {/* <div>Warehousing</div> */}
-          </div>
-          <ul className="nav-links">
-            {sidebarLinks.map((link, index) => {
-              const { id, path, text, icon } = link
-              return (
-                <NavLink
-                  className={({ isActive }) =>
-                    isActive ? 'nav-link active' : 'nav-link'
-                  }
-                  key={index}
-                  to={path}
-                >
-                  <span>{icon}</span>
-                  <p>{text}</p>
-                </NavLink>
-              )
-            })}
-          </ul>
-        </div>
+      <div className="logo-container">
+        <img src={logo} alt="logo" className="logo" />
+        {/* <div>Warehousing</div> */}
       </div>
+      <ul className="nav-links">
+        {sidebarLinks.map((link, index) => {
+          const { id, path, text, icon } = link
+          return (
+            <NavLink
+              className={({ isActive }) =>
+                isActive ? 'nav-link active' : 'nav-link'
+              }
+              key={index}
+              to={path}
+            >
+              <span>{icon}</span>
+              <p>{text}</p>
+            </NavLink>
+          )
+        })}
+      </ul>
     </Wrapper>
   )
 }
 export default Sidebar
 
 const Wrapper = styled.div`
-  display: block;
+  width: 200px;
+  height: 100vh;
   border-right: 1px solid var(--grey-100);
-  /* overflow: hidden; */
-  transition: var(--transition);
-  padding-right: 0.5rem;
-
-  .sidebar-container {
-    background-color: var(--white);
-    height: 100vh;
-    position: sticky;
-    top: 0px;
-    /* left: 0px; */
-  }
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 
   .logo-container {
     display: flex;
@@ -74,7 +63,6 @@ const Wrapper = styled.div`
 
   .nav-links {
     margin-top: 0.5rem;
-    min-width: 13rem;
   }
 
   .active {

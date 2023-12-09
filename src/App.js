@@ -8,6 +8,8 @@ import Settings from './pages/dashboard/Settings'
 import SharedLayout from './pages/dashboard/SharedLayout'
 import Error from './pages/Error'
 import Login from './pages/Login'
+import { ToastContainer } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
 
 function App() {
   useEffect(() => {
@@ -32,6 +34,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="*" element={<Error />} />
       </Routes>
+      <ToastContainer position="bottom-right" />
     </BrowserRouter>
   )
 }

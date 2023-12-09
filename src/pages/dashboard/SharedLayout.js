@@ -15,45 +15,23 @@ const SharedLayout = () => {
 
   return (
     <Wrapper>
-      <main className="main-layout">
-        <Sidebar sidebar={sidebarIsOpen} />
-        <div className="content-layout">
-          <Navbar setSidebarIsOpen={setSidebarIsOpen} sidebar={sidebarIsOpen} />
-          {/* <div className="dashboard-page"> */}
-          <Outlet />
-          {/* </div> */}
-        </div>
-      </main>
+      <Sidebar sidebar={sidebarIsOpen} />
+      <div className="main-content">
+        <Navbar setSidebarIsOpen={setSidebarIsOpen} sidebar={sidebarIsOpen} />
+        <Outlet />
+      </div>
     </Wrapper>
   )
 }
 export default SharedLayout
 
 const Wrapper = styled.section`
-  background-color: var(--white);
-  border-radius: 0.5rem;
+  display: flex;
   height: 100vh;
-  padding: 0 0.5rem;
+  overflow: hidden;
 
-  .main-layout {
-    display: flex;
-    width: 100vw;
-    justify-content: center;
-    height: 100vh;
-    overflow: hidden;
-  }
-
-  .content-layout {
-    width: 100%;
-    height: 100%;
-    display: grid;
-    grid-template-rows: auto 1fr;
-  }
-
-  .dashboard-page {
-    padding: 1rem;
-    width: 100%;
-    height: 100%;
+  .main-content {
+    flex: 1;
     overflow-y: auto;
   }
 `
