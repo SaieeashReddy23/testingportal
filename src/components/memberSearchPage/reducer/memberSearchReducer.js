@@ -4,6 +4,17 @@ export const SET_ERROR = 'SET_ERROR'
 export const SET_SEARCH = 'SET_SEARCH'
 export const SET_SEARCH_CRITERIA = 'SET_SEARCH_CRITERIA'
 export const SET_SHOW_RESULTS = 'SET_SHOW_RESULTS'
+export const BACK_TO_SEARCH = 'BACK_TO_SEARCH'
+
+const initialState = {
+  collection: [],
+  loading: false,
+  error: null,
+  search: 'single',
+  searchCriteria: 'option1',
+  showResults: false,
+  searchData: {},
+}
 
 export const memberSearchReducer = (state, action) => {
   switch (action.type) {
@@ -39,6 +50,10 @@ export const memberSearchReducer = (state, action) => {
         ...state,
         showResults: true,
         searchData: action.payload,
+      }
+    case BACK_TO_SEARCH:
+      return {
+        ...initialState,
       }
     default:
       return state

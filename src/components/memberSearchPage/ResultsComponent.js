@@ -1,5 +1,6 @@
 import { Descriptions } from 'antd'
 import axios from 'axios'
+import { MdArrowBack } from 'react-icons/md'
 import { useEffect, useState } from 'react'
 import { useContext } from 'react'
 import { styled } from 'styled-components'
@@ -11,6 +12,7 @@ import {
   SEARCH_CRITERIA_NAME_DOB,
 } from '../../utils/constants'
 import TransactionIdDependentResultComponent from './resultComponents/TransactionIdDependentResultComponent'
+import { BACK_TO_SEARCH } from './reducer/memberSearchReducer'
 
 const transactionIdDependedntApis = [
   {
@@ -3615,11 +3617,15 @@ const getSearchedData = (searchCriteria, searchData) => {
 }
 
 const ResultsComponent = () => {
-  const { state } = useContext(memberSearchContext)
+  const { state, dispatch } = useContext(memberSearchContext)
   const { searchData, searchCriteria } = state
   const [transactionId, setTransactionId] = useState('')
   const [eligv2Data, setEligv2Data] = useState(null)
   const [eligv2Url, setEligV2Url] = useState('')
+
+  const handlebackBtn = () => {
+    dispatch({ type: BACK_TO_SEARCH })
+  }
 
   const fetchEligv2Data = async () => {
     try {
@@ -3643,8 +3649,11 @@ const ResultsComponent = () => {
   return (
     <Wrapper>
       <div className="results-header">
+        <button className="back-btn" onClick={handlebackBtn}>
+          <MdArrowBack />
+        </button>
         <Descriptions
-          title="Searched Member "
+          title=""
           items={getSearchedData(searchCriteria, searchData)}
         />
       </div>
@@ -3687,6 +3696,30 @@ export default ResultsComponent
 
 const Wrapper = styled.div`
   padding: 1rem;
+
+  .results-header {
+    display: flex;
+    gap: 4rem;
+    align-items: baseline;
+  }
+
+  .back-btn {
+    display: grid;
+    place-items: center;
+    background-color: var(--white);
+    padding: 0.25rem 0.75rem;
+    font-size: 1.2rem;
+    border: 1px solid var(--grey-300);
+    border-radius: 0.5rem;
+    color: var(--grey-600);
+    margin: 1rem 0;
+    cursor: pointer;
+    transition: var(--transition);
+  }
+
+  .back-btn:hover {
+    transform: scale(1.05);
+  }
 
   .eligv2-result-container {
     border: 1px solid var(--grey-100);
