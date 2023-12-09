@@ -10,6 +10,7 @@ import Error from './pages/Error'
 import Login from './pages/Login'
 import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
+import ComparisonV2 from './pages/dashboard/ComparisonV2'
 
 function App() {
   useEffect(() => {
@@ -28,7 +29,7 @@ function App() {
           <Route index element={<Dashboard />} />
           <Route path="/search" element={<MemberSearch />} />
           <Route path="/history" element={<History />} />
-          <Route path="/comparison" element={<Comparison />} />
+          <Route path="/comparison" element={<ComparisonV2 />} />
           <Route path="/settings" element={<Settings />} />
         </Route>
         <Route path="/login" element={<Login />} />
